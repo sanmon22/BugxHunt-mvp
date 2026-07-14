@@ -1,5 +1,5 @@
 import { Bug } from "./bug.entity.js";
-import { validateBug } from "../../validations/bug.validation.js";
+import { validateBug } from "../../validations/bug/bug.validation.js";
 
 export type CreateBugInput = Omit<Bug, 'id' | 'createdAt' | 'updatedAt'>;
 

@@ -1,4 +1,4 @@
-import { Bug } from '../entities/bug/bug.entity.js';
+import { Bug } from '../../entities/bug/bug.entity.js';
 
 export interface IBugRepository {
   findAll(): Promise<Bug[]>;

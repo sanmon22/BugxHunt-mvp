@@ -1,5 +1,5 @@
-import { Bug } from "../entities/bug/bug.entity.js";
-import { ValidationError } from "../errors/validation.error.js";
+import { Bug } from "../../entities/bug/bug.entity.js";
+import { ValidationError } from "../../errors/validation.error.js";
 
 const URL_PATTERN = /^https?:\/\/.+/;
 const REFERENCE_PATTERN = /^[A-Za-z0-9]+(-[A-Za-z0-9]+)*$/;
