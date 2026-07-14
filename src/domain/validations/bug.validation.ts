@@ -1,4 +1,4 @@
-import { Bug } from "../entities/bug.entity.js";
+import { Bug } from "../entities/bug/bug.entity.js";
 import { ValidationError } from "../errors/validation.error.js";
 
 const URL_PATTERN = /^https?:\/\/.+/;
