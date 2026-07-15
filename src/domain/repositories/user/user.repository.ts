@@ -1,9 +1,9 @@
-import { User } from '../entities/user.entity.js';
+import { User } from '../../entities/user/user.entity.js';
 
 export interface IUserRepository {
   findAll(): Promise<User[]>;
   findById(id: string): Promise<User | null>;
-  create(user: Omit<User, 'id'>): Promise<User>;
+  create(user: User): Promise<User>;
   update(id: string, data: Partial<User>): Promise<User | null>;
-  delete(id: string): Promise<boolean> ;
+  delete(id: string): Promise<boolean>;
 }
