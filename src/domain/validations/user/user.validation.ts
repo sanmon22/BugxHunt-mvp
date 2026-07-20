@@ -29,8 +29,8 @@ export function validateUserPassword(password: string): void {
     if (typeof password !== 'string' || password.trim().length === 0) {
         throw new ValidationError('Password cannot be empty', 'password')
     }
-    if (password.length < 60) {
-        throw new ValidationError('Password must be at least 60 characters', 'password');
+    if (password.length < 12) {
+        throw new ValidationError('Password must be at least 12 characters', 'password');
     }
 }
 
