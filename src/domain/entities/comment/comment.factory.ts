@@ -1,7 +1,7 @@
 import { Comment } from "./comment.entity.js";
 import { validateComment } from "../../validations/comment/comment.validation.js";
 
-export type CreateCommentInput = Omit<Comment, 'id' | 'createdAt' | 'udpatedAt'>;
+export type CreateCommentInput = Omit<Comment, 'id' | 'createdAt' | 'updatedAt'>;
 
 export function createComment(data: CreateCommentInput): Comment {
     validateComment(data);
