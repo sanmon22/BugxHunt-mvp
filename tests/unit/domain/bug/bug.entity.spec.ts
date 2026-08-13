@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
-import { createBug } from "../../../src/domain/entities/bug/bug.factory.js";
-import { ValidationError } from "../../../src/domain/errors/validation.error.js";
+import { createBug } from "../../../../src/domain/entities/bug/bug.factory.js";
+import { ValidationError } from "../../../../src/domain/errors/validation.error.js";
 
 describe('Bug Entity Invariants', () => {
     test('should create a valid Bug entity instance with correct properties', () => {

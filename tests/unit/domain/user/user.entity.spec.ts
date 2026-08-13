@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
-import { createUser } from "../../../src/domain/entities/user/user.factory.ts";
-import { ValidationError } from "../../../src/domain/errors/validation.error.ts";
+import { createUser } from "../../../../src/domain/entities/user/user.factory.ts";
+import { ValidationError } from "../../../../src/domain/errors/validation.error.ts";
 
 describe('User Entity Invariants', () => {
     test('Should create a valid User entity instance with correct properties', () => {

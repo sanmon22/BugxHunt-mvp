@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
-import { createComment } from "../../../src/domain/entities/comment/comment.factory.ts";
-import { ValidationError } from "../../../src/domain/errors/validation.error.ts";
+import { createComment } from "../../../../src/domain/entities/comment/comment.factory.ts";
+import { ValidationError } from "../../../../src/domain/errors/validation.error.ts";
 
 
 describe('Comment Entity Invariants', () => {
