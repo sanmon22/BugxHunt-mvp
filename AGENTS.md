@@ -12,39 +12,145 @@ npm run test         # vitest run — single sweep
 npm run test:watch   # vitest — watch mode for TDD
 ```
 
-No lint or formatter configured. No CI workflows exist yet.
-
 ## Architecture
 
 ```
 src/
 ├── domain/          # Pure business logic — entities (interfaces) + repository contracts
-├── application/     # Use cases (empty, coming in Phase 3)
+├── application/     # Use cases (CRUD operations)
 └── infrastructure/  # Persistence (JSON storage, memory) + web (Express routes/controllers)
 ```
 
-- **Dependency direction**: infrastructure → application → domain. Domain has zero external dependencies.
-- **Entities are interfaces**, not classes. Validation is not yet implemented (Phase 2 scope).
-- **Three entities**: Bug, User, Comment. Currently isolated — no foreign keys or relationships between them.
+### Layer Responsibilities
+
+| Layer | Responsibility | Dependencies |
+|-------|---------------|--------------|
+| **Domain** | Entities (interfaces), validations, repository contracts, error classes | None (zero external dependencies) |
+| **Application** | Use cases with Constructor Dependency Injection | Domain only |
+| **Infrastructure** | Express routes, JSON file storage, controllers | Application + Domain |
+
+### Dependency Rule
+
+Dependency direction: **infrastructure → application → domain**
+
+- Domain layer has **zero external dependencies**
+- Application layer imports from Domain only
+- Infrastructure layer imports from Application and Domain
+
+### Entities
+
+Three isolated entities with **no foreign keys or relationships**:
+
+| Entity | Purpose |
+|--------|---------|
+| **Bug** | Bug reports with details, images, references, notes |
+| **User** | User accounts with username, email, password |
+| **Comment** | Comments with text and notes |
 
 ## Critical Constraints
 
-1. **ESM only**. `"type": "module"` in package.json. All imports must use `.js` extensions (e.g., `import { Bug } from '../entities/bug.entity.js'`).
+### 1. ESM Only
 
-2. **Use `import.meta.env.MODE`**, not `process.env`. Vitest configures environment via Vite — `process.env` will not work as expected.
+```json
+{
+  "type": "module"
+}
+```
 
-3. **Vitest globals are enabled**. `describe`, `test`, `expect`, `vi` are available without imports. Config is in `vite.config.ts`.
+All imports **must** use `.js` extensions:
 
-4. **Test file patterns**: `tests/**/*.spec.ts` or `tests/**/*.test.ts`. Currently no test files exist — `tests/fixtures/` is empty.
+```typescript
+// ✅ Correct
+import { Bug } from '../entities/bug/bug.entity.js';
 
-5. **Module resolution**: `NodeNext`. tsconfig target is ES2024 with strict mode.
+// ❌ Wrong
+import { Bug } from '../entities/bug/bug.entity';
+```
+
+### 2. Environment Variables
+
+Use `import.meta.env.MODE`, **not** `process.env`:
+
+```typescript
+// ✅ Correct (Vitest/Vite compatible)
+const mode = import.meta.env.MODE;
+
+// ❌ Wrong (won't work in Vitest)
+const mode = process.env.NODE_ENV;
+```
+
+### 3. Vitest Globals
+
+Globals are enabled — no imports needed for test functions:
+
+```typescript
+// ✅ Correct (globals enabled)
+describe('Bug Entity', () => {
+  test('should create bug', () => {
+    expect(true).toBe(true);
+  });
+});
+```
+
+### 4. TypeScript Configuration
+
+| Setting | Value |
+|---------|-------|
+| Module Resolution | `NodeNext` |
+| Target | `ES2024` |
+| Strict Mode | `true` |
+| Module | `NodeNext` |
+
+### 5. Naming Conventions
+
+| Type | Pattern | Example |
+|------|---------|---------|
+| Use Cases | `action.[entity].use-case.ts` | `create.bug.use-case.ts` |
+| Entities | `[entity].entity.ts` | `bug.entity.ts` |
+| Factories | `[entity].factory.ts` | `bug.factory.ts` |
+| Validations | `[entity].validation.ts` | `bug.validation.ts` |
+| Repositories | `[entity].repository.ts` | `bug.repository.ts` |
+| Errors | `[error-type].error.ts` | `validation.error.ts` |
+| Tests | `[name].spec.ts` | `bug.entity.spec.ts` |
+
+### 6. Constructor Pattern
+
+Use explicit declaration (Option B):
+
+```typescript
+export class CreateBugUseCase {
+    private readonly bugRepository: IBugRepository;
+
+    constructor(bugRepository: IBugRepository) {
+        this.bugRepository = bugRepository;
+    }
+}
+```
+
+### 7. Mocking Pattern
+
+```typescript
+const mockBugRepository = {
+    findAll: vi.fn(),
+    findById: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+};
+
+beforeEach(() => {
+    vi.clearAllMocks();
+});
+```
 
 ## Agent Skills
 
-Two skills are loaded in `.agents/skills/` and should be enforced during code generation:
-- **clean-code** — Robert C. Martin principles. Enforce SRP, meaningful names, small functions, no comments.
-- **nodejs-backend-patterns** — Express/Fastify patterns, error handling, dependency injection.
+Two skills available in `.agents/skills/`:
+- **clean-code** — Robert C. Martin principles (SRP, meaningful names, small functions, no comments)
+- **nodejs-backend-patterns** — Express/Node.js patterns, error handling, dependency injection
 
-## Development Stage
+## Detailed Documentation
 
-Incremental phased build. `plan.md` has the full roadmap. Current state: Phase 1 complete (scaffold + domain interfaces). Next: Phase 2 (domain validation + custom error classes + tabular test specs).
+- `.agents/plan.md` — Full roadmap (4 phases with checkpoints)
+- `.agents/mvp-bug-ia-guidance.md` — Agent behavior guidelines
+- `.agents/current_progress.md` — Current progress and session handoff
