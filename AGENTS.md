@@ -79,12 +79,14 @@ const mode = import.meta.env.MODE;
 const mode = process.env.NODE_ENV;
 ```
 
-### 3. Vitest Globals
+### 3. Vitest Imports
 
-Globals are enabled — no imports needed for test functions:
+Use explicit imports from `'vitest'` in test files:
 
 ```typescript
-// ✅ Correct (globals enabled)
+// ✅ Correct (explicit imports)
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+
 describe('Bug Entity', () => {
   test('should create bug', () => {
     expect(true).toBe(true);
